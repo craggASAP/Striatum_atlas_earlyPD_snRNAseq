@@ -26,9 +26,10 @@ This repository contains scripts used to (1) analyze and plot single-nucleus RNA
 The code in this repository is designed to run on systems capable of supporting:
 
 - R (version 4.1.3 or later)
-- Python (version 3.8 or later)
-- Seurat (version 4.0.1 or later) for downstream data analysis.
 - Required R Packages: libraries in the file library.R in the folder **snRNA seq/**
+- Python (version 3.8 or later)
+- Seurat (version 4.0.1 or later) for downstream data analysis
+- Unix-like system to run shell scripts
 
 ------------------
 ## Hardware Requirements
@@ -45,17 +46,15 @@ The computational requirements to run the analyses are well within the capacity 
 The repository is organized as follows:
 
 - Folder **snRNA_seq/** contains scripts for <i>analyzing single-nucleus RNA sequencing data</i>:
-    - **cellXgene/gene_matrix_creation_for_mapmycell.ipynb**, **cellXgene/Dataset_fix_for_cellxgene_mouse.R** and **cellXgene/Dataset_fix_for_cellxgene_human.R**: Python and R scripts used to format and convert the data for [CellXGene](https://cellxgene.cziscience.com/) resource.
-    - **gene_matrix_creation_for_mapmycell.ipynb**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells).
-    - **Mouse datasets**: Scripts to analize and generate figures using mouse full datasets (subfolder **Analysis_full_dataset**) shown in Figure 1 and 2, and mouse subclustering datasets (subfolder**Sub_clustering_SPNs_mouse**) shown in Figure 3.
-    - **Human datasets**: Scripts to analize and generate figures for human full datasets (subfolder **Analysis_full_dataset**) shown in Figure 1 and 5, and human subclustering datasets (subfolder **Sub_clustering_SPNs_human**) shown in Figure 6.
-    - **cellranger_run_loop.sh**, **run_cr_230619.sh**, **run_cr_count_2023-06-26.sh** within subfolder **CellRanger_Processing_Scripts**: Scripts written by Yuvarani Masarapu from Giacomello Lab to generate gene count matrices using Cell Ranger software (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)).
+    - **cellXgene**: Python and R scripts used to format and convert the data for [CellXGene](https://cellxgene.cziscience.com/) resource (**cellXgene/gene_matrix_creation_for_mapmycell.ipynb**, **cellXgene/Dataset_fix_for_cellxgene_mouse.R** and **cellXgene/Dataset_fix_for_cellxgene_human.R**).
+    - **MapMyCell**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells) (**MapMyCell/gene_matrix_creation_for_mapmycell.ipynb**).
+    - **Mouse datasets**: R scripts to analize and generate figures using mouse full datasets (**Mouse Datasets/Analysis_full_dataset**) shown in Figure 1 and 2, and mouse subclustering datasets (**Mouse Datasets/Sub_clustering_SPNs_mouse**) shown in Figure 3.
+    - **Human datasets**: R scripts to analize and generate figures for human full datasets (**Human Datasets/Analysis_full_dataset**) shown in Figure 1 and 5, and human subclustering datasets (**Human Datasets/Sub_clustering_SPNs_human**) shown in Figure 6.
+    - **Cell_Ranger**: Shell scripts written by Yuvarani Masarapu from Giacomello Lab to generate gene count matrices of each sample obtained from Chromium single-cell experiments using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0) (**Cell_Ranger/cellranger_run_loop.sh**, **Cell_Ranger/run_cr_230619.sh**, **CellRanger/run_cr_count_2023-06-26.sh**) (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)).
  
-- The sequenced libraries from the Visium experiments were processed using the 10x Genomics Spaceranger pipeline (10x Genomics Space Ranger v1.3.1) to generate the gene count matrices for the downstream data analysis. 
- 
-- Folder **SpatialTranscriptomics** contains scripts ritten by Yuvarani Masarapu from Giacomello Lab (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i> generate gene count matrices </i> using Space Ranger software (subfolder **SpaceRanges_Processing_Scripts**) and <i> analize and generate figures </i> (sub-folder **Analysis** and **Plots**) using spatial transcriptomics datasets.
+- Folder **SpatialTranscriptomics** contains scripts written by Yuvarani Masarapu from Giacomello Lab (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i> generate gene count matrices of each sequenced library </i> obtained from the Visium experiments using the 10x Genomics Space Ranger pipeline (10x Genomics Space Ranger v1.3.1) (**SpatialTranscriptomics/Space_Ranger**), <i> perform downstream analysis </i> in R (v4.1.3; later updated to v4.3.2) using the Seurat package50–54 (v5.0.1) (**SpatialTranscriptomics/Analysis**), and <i> generate plots shown in Figure 4 </i> (**SpatialTranscriptomics/Plots**).
 
-- Folder **Trajectory_Inference/** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets.
+- Folder **Trajectory_Inference/** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets. The input file is a sceGAM object obtained from the tradeSeq algorithm which performs a trajectory differential expression analysis.
  
 ------------------
 ## Data Availability
