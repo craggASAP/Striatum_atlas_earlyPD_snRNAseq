@@ -18,7 +18,7 @@
 ------------------
 ## Project Overview
 
-<p align="justify">This repository contains scripts used to (1) analyze and plot single-nucleus RNA sequencing (snRNA-seq) data for cell-specific transcriptomic changes in the striatum from Parkinson's Disease (PD) mouse models and human tissue; (2) Process and visualize spatial transcriptomics (ST) data to map regional vulnerabilities within the striatum, (3) perform differential expression and pseudotime trajectory analyses for specific cell types, particularly focusing on astrocytes, oligodendrocytes, and spiny projection neurons (SPNs); and (4) Apply computational models for trajectory inference and pseudotime analyse. These scripts were custom-written by Marta Graziano and used in the study "RA molecular atlas of cell types in the mouse and human parkinsonian striatum."<p/>
+This repository contains scripts used to (1) analyze and plot single-nucleus RNA sequencing (snRNA-seq) data for cell-specific transcriptomic changes in the striatum from Parkinson's Disease (PD) mouse models and human tissue; (2) analyze and plot spatial transcriptomics (ST) data to map regional vulnerabilities within the striatum, (3) perform differential expression and pseudotime trajectory analyses for specific cell types, particularly focusing on astrocytes, oligodendrocytes, and spiny projection neurons (SPNs); and (4) apply computational models for trajectory inference and pseudotime analyse. These scripts were custom-written by Marta Graziano from [Meletis Lab](https://ki.se/en/research/research-areas-centres-and-networks/research-groups/konstantinos-meletis-group#tab-research-focus) and Yuvarani Masarapu from [Giacomello Lab](https://www.spatialresearch.org/research-giacomello-lab/) and used in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum."
 
 ------------------
 ## System Requirements
@@ -45,25 +45,23 @@ The computational requirements to run the analyses are well within the capacity 
 The repository is organized as follows:
 
 - Folder **snRNA_seq/** contains scripts for <i>analyzing single-nucleus RNA sequencing data</i>:
-    - **Conversion from anndata for cellxgene.ipynb**, **Dataset_fix_for_cellxgene_mouse.R** and **Dataset_fix_for_cellxgene_human.R**: Python and R scripts used to format and convert the data for CellXGene resource (https://cellxgene.cziscience.com/).
-    - **gene_matrix_creation_for_mapmycell.ipynb**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool MapMyCells (https://portal.brain-map.org/atlases-and-data/bkp/mapmycells).
-    - **snRNA_seq/Mouse datasets**: Scripts to analize and generate figures for mouse datasets. Divided in two subfolders for analysis of the full dataset (**snRNA_seq/Mouse datasets/Analysis_full_dataset**), for figure 1 and 2, subclustering (**snRNA_seq/Mousedatasets/Sub_clustering_SPNs_mouse**) for figure 3.
-    - **snRNA_seq/Human datasets**: Scripts to analize and generate figures for human datasets. Divided in two subfolders for analysis of the full dataset (**snRNA_seq/Human datasets/Analysis_full_dataset**), for figure 1 and 5, subclustering (**snRNA_seq/Humandatasets/Sub_clustering_SPNs_human**) for figure 6.
+    - **gene_matrix_creation_for_mapmycell.ipynb**, **Dataset_fix_for_cellxgene_mouse.R** and **Dataset_fix_for_cellxgene_human.R** within subfolder ***cellXgene**: Python and R scripts used to format and convert the data for [CellXGene](https://cellxgene.cziscience.com/) resource.
+    - **gene_matrix_creation_for_mapmycell.ipynb**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells).
+    - **Mouse datasets**: Scripts to analize and generate figures using mouse full datasets (subfolder **Analysis_full_dataset**) shown in Figure 1 and 2, and mouse subclustering datasets (subfolder**Sub_clustering_SPNs_mouse**) shown in Figure 3.
+    - **Human datasets**: Scripts to analize and generate figures for human full datasets (subfolder **Analysis_full_dataset**) shown in Figure 1 and 5, and human subclustering datasets (subfolder **Sub_clustering_SPNs_human**) shown in Figure 6.
+    - **cellranger_run_loop.sh**, **run_cr_230619.sh**, **run_cr_count_2023-06-26.sh** within subfolder **CellRanger_Processing_Scripts**: Scripts written by Yuvarani Masarapu from Giacomello Lab to generate gene count matrices using Cell Ranger software (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)).
+ 
+- Folder **SpatialTranscriptomics** contains scripts ritten by Yuvarani Masarapu from Giacomello Lab (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i> generate gene count matrices </i> using Space Ranger software (subfolder **SpaceRanges_Processing_Scripts**) and <i> analize and generate figures </i> (sub-folder **Analysis** and **Plots**) using spatial transcriptomics datasets.
 
-- Folder **Trajectory_Inference/** contains R scripts for <i>pseudotime and trajectory analyses</i> for human and mouse datasets in figures 2, 3, 5 and 6.
-
-- Folder **Datasets/** contains instructions for <i>accessing raw and processed data</i>.
-
-- https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics contains scripts to <i>analize and generate figures of spatial transcriptomics datasets</i> for figure 4.
-  
+- Folder **Trajectory_Inference/** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets.
+ 
 ------------------
 ## Data Availability
 
-The raw mouse sequencing data (ST and snRNA-seq) generated for this manuscript will be published upon submission in the CRN Google Cloud repository. The same repository already hosts the raw data for the human postmortem dataset, accessible at: https://cloud.parkinsonsroadmap.org/collections.
-Processed matrices and analyzed datasets for snRNA seq will be available on the CellXGene platform after acceptance. 
+The raw mouse sequencing data (ST and snRNA-seq) generated for this manuscript will be available on the [ASAP CRN Cloud](https://cloud.parkinsonsroadmap.org/collections) repository. The same repository already hosts the raw data for the human postmortem dataset (accessible [here](https://cloud.parkinsonsroadmap.org/collections/jakobsson-20/overview)). Processed matrices and analyzed datasets for snRNA seq will be available on the CellXGene platform upon publication. 
 
 ------------------
-##  License and Citation
+## License and Citation
 
 If you use this code in your research, please cite the following:
 
