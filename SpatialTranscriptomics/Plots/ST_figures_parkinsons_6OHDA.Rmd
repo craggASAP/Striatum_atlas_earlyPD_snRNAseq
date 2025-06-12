@@ -1,0 +1,347 @@
+---
+title: "figures 6OHDA ST data"
+author: "Yuvarani Masarapu"
+date: '2024-04-16'
+output: html_document
+---
+
+```{r}
+#X11Fonts()$sans
+#[1] "-*-helvetica-%s-%s-*-*-%d-*-*-*-*-*-*-*"
+```
+
+# Libraries
+```{r lib-load, message=FALSE, warning=FALSE, echo=FALSE}
+library(Seurat)
+library(SeuratObject)
+library(STutility)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(data.table)
+library(Signac)
+library(cowplot)
+library(grid)
+library(GenomeInfoDb)
+library(dplyr)
+library(Biobase)
+library(BiocManager)
+library(AnnotationDbi)
+```
+
+# Objects
+```{r eval=FALSE}
+spatial.data <- readRDS("~/Documents/deconvolution_OHDA/results_reference_sn-OHDA/data.integrated.clusters_2022-08-22.rds")
+
+indir <- getwd()
+
+colors.cl <- c("#F18F01", "#878787", "#FCCDE5", "#048BA8", "#2E4057", "#99C24D", "#B95F89", "#5F070C" ,  "#DFC27D", "#DB6C79", "#B191FF", "#157A6E", "#73683B", "#97C8EB","#C51B7D", "#BA9763", "#31081F", "#52D1DC", "#700353", "#F5D3C8", "#725752", "#D8315B", "#6B4E71", "#8CBFCF" , "#C2B2B4", "#EDE5A6", "#52B788", "#EE1B26", "#F2F230", "#91F291", "#386CB0", "#E7298A")
+```
+
+# Stats plots
+
+## Raw reads per spot
+
+### Whole dataset
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_Spatial", group.by = "orig.ident", pt.size = 0, assay = "Spatial") + ggtitle("UMI/spot for 6OHDA ST dataset")
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_Spatial", group.by = "orig.ident", pt.size = 0, assay = "Spatial") + ggtitle("Genes/spot for 6OHDA ST dataset")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_whole_dataset/stats_perSpot_unnormalised.pdf", sep = ""), dpi = 300, width = 10, height = 5)
+```
+
+### Per section
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_Spatial", group.by = "sample_id", pt.size = 0, assay = "Spatial") + ggtitle("UMI/spot for 6OHDA ST dataset") + NoLegend()
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_Spatial", group.by = "sample_id", pt.size = 0, assay = "Spatial") + ggtitle("Genes/spot for 6OHDA ST dataset")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_per_section/stats_perSpot_unnormalised_groupby_sections.pdf", sep = ""), dpi = 300, width = 16, height = 5)
+```
+
+### Split by condition
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_Spatial", group.by = "sample_type", pt.size = 0, assay = "Spatial") + ggtitle("UMI/spot for 6OHDA ST dataset") + NoLegend()
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_Spatial", group.by = "sample_type", pt.size = 0, assay = "Spatial") + ggtitle("Genes/spot for 6OHDA ST dataset")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_per_condition/stats_perSpot_unnormalised_groupby_condition.pdf", sep = ""), dpi = 300, width = 10, height = 5)
+```
+
+## Normalised reads per spot
+
+### Overall
+
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_SCT", group.by = "orig.ident", pt.size = 0, assay = "SCT") + ggtitle("UMI/spot for 6OHDA ST dataset (SCT)")
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_SCT", group.by = "orig.ident", pt.size = 0, assay = "SCT") + ggtitle("Genes/spot for 6OHDA ST dataset (SCT)")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_whole_dataset/stats_perSpot_Normalised.pdf", sep = ""), dpi = 300, width = 10, height = 5)
+```
+
+### Per section
+
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_SCT", group.by = "sample_id", pt.size = 0, assay = "SCT") + ggtitle("UMI/spot for 6OHDA ST dataset (SCT)") + NoLegend()
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_SCT", group.by = "sample_id", pt.size = 0, assay = "SCT") + ggtitle("Genes/spot for 6OHDA ST dataset (SCT)")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_per_section/stats_perSpot_Normalised_groupby_sections.pdf", sep = ""), dpi = 300, width = 16, height = 5)
+```
+
+### Split by condition
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_SCT", group.by = "sample_type", pt.size = 0, assay = "SCT") + ggtitle("UMI/spot for 6OHDA ST dataset (SCT)") + NoLegend()
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_SCT", group.by = "sample_type", pt.size = 0, assay = "SCT") + ggtitle("Genes/spot for 6OHDA ST dataset (SCT)")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_per_condition/stats_perSpot_Normalised_groupby_condition.pdf", sep = ""), dpi = 300, width = 10, height = 5)
+```
+
+# UMAP clusters
+
+## Whole dataset
+```{r}
+p <- DimPlot(object = spatial.data, reduction = "umap_after_harmony", group.by = "seurat_clusters", label = T, pt.size = 0.5, cols = colors.cl)
+ggsave(plot = p, filename = paste(indir, "/clusters/UMAPs/seurat_clusters_ST_6OHDA_UMAP.pdf", sep = ""), height = 10, width = 12, dpi = 300)
+```
+
+## Split by condition
+```{r}
+p <- DimPlot(object = spatial.data, reduction = "umap_after_harmony", group.by = "seurat_clusters", label = T, pt.size = 0.5, split.by = "sample_type", cols = colors.cl)
+ggsave(plot = p, filename = paste(indir, "/clusters/UMAPs/seurat_clusters_ST_6OHDA_UMAP_splitby_condition.pdf", sep = ""), height = 10, width = 20, dpi = 300)
+```
+
+# Violins for clusters
+```{r}
+p <- VlnPlot(object = spatial.data, features = "nCount_Spatial", group.by = "seurat_clusters", pt.size = 0, assay = "Spatial", cols = colors.cl) + ggtitle("UMI/spot for 6OHDA ST dataset") + NoLegend()
+
+p1 <- VlnPlot(object = spatial.data, features = "nFeature_Spatial", group.by = "seurat_clusters", pt.size = 0, assay = "Spatial", cols = colors.cl) + ggtitle("Genes/spot for 6OHDA ST dataset")
+
+p2 <- p - p1
+
+p2
+
+ggsave(p2, filename = paste(indir, "/stats/stats_perSpot_unnormalised_groupby_Clusters.pdf", sep = ""), dpi = 300, width = 20, height = 6)
+```
+
+# Spatial heatmaps of clusters
+
+## with tissue background
+
+```{r fig.height=16, fig.width=16}
+images <- c("slice1", "slice1.1", "slice1.2", "slice1.3", "slice1.4", "slice1.5", "slice1.6", "slice1.7", "slice1.8", "slice1.9", "slice1.10", "slice1.11",
+            "slice1.12", "slice1.13", "slice1.14", "slice1.15", "slice1.16", "slice1.17", "slice1.18", "slice1.19", "slice1.20", "slice1.21", "slice1.22", "slice1.23")
+samples <- unique(spatial.data$sample_id)
+names(colors.cl) <- levels(spatial.data)
+
+for(i in 1:length(images)){
+  p <- SpatialPlot(object = spatial.data, pt.size.factor = 1, crop = FALSE, image.alpha = 1, label = TRUE, group.by = "seurat_clusters", images = images[i], cols = colors.cl) + ggtitle(samples[i])
+ggsave(plot = p, filename = paste(indir, "/clusters/clusters_on_tissue/spatial_plots_clusters_on_tissue", samples[i], ".pdf", sep = ""), dpi = 300, width = 8, height = 8)
+}
+```
+
+## without tissue background
+
+```{r fig.height=16, fig.width=16}
+images <- c("slice1", "slice1.1", "slice1.2", "slice1.3", "slice1.4", "slice1.5", "slice1.6", "slice1.7", "slice1.8", "slice1.9", "slice1.10", "slice1.11",
+            "slice1.12", "slice1.13", "slice1.14", "slice1.15", "slice1.16", "slice1.17", "slice1.18", "slice1.19", "slice1.20", "slice1.21", "slice1.22", "slice1.23")
+samples <- unique(spatial.data$sample_id)
+names(colors.cl) <- levels(spatial.data)
+
+for(i in 1:length(images)){
+  p <- SpatialPlot(object = spatial.data, pt.size.factor = 1, crop = FALSE, image.alpha = 0, label = TRUE, group.by = "seurat_clusters", images = images[i], cols = colors.cl) + ggtitle(samples[i])
+ggsave(plot = p, filename = paste(indir, "/clusters/clusters_without_tissue/spatial_plots_clusters_NoTissue_", samples[i], ".pdf", sep = ""), dpi = 300, width = 8, height = 8)
+}
+```
+
+
+# Heatmap cluster markers
+
+## markers for ST 6OHDA dataset
+
+Heatmap with white to dark brown color scale would be good
+Also try the DoHeatmap from seurat for the plot
+
+```{r}
+DefaultAssay(spatial.data) <- "SCT"
+wnn_markers <- FindAllMarkers(spatial.data, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, recorrect_umi = FALSE)
+```
+
+```{r}
+library(dplyr)
+top10B <- wnn_markers %>%
+  group_by(cluster) %>%
+  dplyr::filter(p_val_adj < 0.01) %>%
+  dplyr::filter(row_number() %in% 1:5)
+
+p <- DotPlot(spatial.data, features = unique(top10B$gene) %>% rev()) + 
+  coord_flip() + 
+  scale_colour_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdGy") %>% rev()) + labs(y = "cluster") +
+  theme(axis.text = element_text(family = "sans", size = 16),
+        axis.title = element_text(family = "sans", size = 20),
+        legend.key.size = unit(10, units = "mm"),
+        legend.text = element_text(family = "sans", size = 16),
+        legend.title = element_text(family = "sans", size = 18))
+ggsave(p, filename = "/clusters/dotplot_top5_markers/dotplot_ST-6OHDA_cl_markers_top5.pdf", dpi = 300, height = 28, width = 12)
+```
+
+# Spatial heatmaps for marker genes
+
+```{r}
+heatmap.cl <- c("#E0E0E0", "#BABABA", "#FDDBC7", "#F4A582", "#D6604D", "#B2182B","#67001F")
+```
+
+## Striatal
+```{r}
+genes <- c("Adora2a", "Cnr1", "Col6a1", "Crym", "Dlk1", "Drd2", "Epha4", "Gpr155", "Id4", "Kremen1", "Lypd1", "Oprm1", "Sema5b", "Sgk1", "Spon1", "Tac1", "Tshz1", "Wfs1")
+
+for(i in 1:length(genes)){
+  plots <- list()
+  for(j in 1:length(images)){
+    plots[[j]] <- SpatialFeaturePlot(object = spatial.data, features = genes[i], pt.size.factor = 1.2, stroke = 0, crop = FALSE, image.alpha = 0, images = images[j]) +
+    ggtitle(samples[j]) +  
+    scale_fill_gradientn(colors = heatmap.cl) +
+    theme(legend.key.size = unit(2, units = "mm"),
+          legend.text = element_text(size = 3),
+          legend.title = element_text(size = 5),
+          plot.title = element_text(size = 3))
+  }
+  p <- cowplot::plot_grid(plotlist = plots, nrow = 5, ncol = 5)
+  ggsave(plot = p, filename = paste(indir, "/markers/spatial_heatmaps/striatal/", genes[i], ".pdf", sep = ""), dpi = 300, width = 210, height = 297, units = "mm")
+}
+```
+
+## Cortex
+```{r}
+genes <- c("Slc17a6", "Slc17a7", "Rbp4", "Tlx3", "Pvalb", "Npy", "Chat", "Cux2")
+
+for(i in 1:length(genes)){
+  plots <- list()
+  for(j in 1:length(images)){
+    plots[[j]] <- SpatialFeaturePlot(object = spatial.data, features = genes[i], pt.size.factor = 1.2, stroke = 0, crop = FALSE, image.alpha = 0, images = images[j]) +
+    ggtitle(samples[j]) +  
+    scale_fill_gradientn(colors = heatmap.cl) +
+    theme(legend.key.size = unit(2, units = "mm"),
+          legend.text = element_text(size = 3),
+          legend.title = element_text(size = 5),
+          plot.title = element_text(size = 3))
+  }
+  p <- cowplot::plot_grid(plotlist = plots, nrow = 5, ncol = 5)
+  ggsave(plot = p, filename = paste(indir, "/markers/spatial_heatmaps/cortex/", genes[i], ".pdf", sep = ""), dpi = 300, width = 210, height = 297, units = "mm")
+}
+```
+
+## Glia
+```{r}
+genes <- c("Mbp","Tnc","Cx3cr1","Slc1a3","Pdgfra","Gfap")
+
+for(i in 1:length(genes)){
+  plots <- list()
+  for(j in 1:length(images)){
+    plots[[j]] <- SpatialFeaturePlot(object = spatial.data, features = genes[i], pt.size.factor = 1.2, stroke = 0, crop = FALSE, image.alpha = 0, images = images[j]) +
+    ggtitle(samples[j]) +  
+    scale_fill_gradientn(colors = heatmap.cl) +
+    theme(legend.key.size = unit(2, units = "mm"),
+          legend.text = element_text(size = 3),
+          legend.title = element_text(size = 5),
+          plot.title = element_text(size = 3))
+  }
+  p <- cowplot::plot_grid(plotlist = plots, nrow = 5, ncol = 5)
+  ggsave(plot = p, filename = paste(indir, "/markers/spatial_heatmaps/glia/", genes[i], ".pdf", sep = ""), dpi = 300, width = 210, height = 297, units = "mm")
+}
+```
+
+# UMAP marker genes
+
+## Whole dataset
+
+### Striatal
+
+#### All spots in one UMAP
+```{r}
+genes <- c("Adora2a", "Cnr1", "Col6a1", "Crym", "Dlk1", "Drd2", "Epha4", "Gpr155", "Id4", "Kremen1", "Lypd1", "Oprm1", "Sema5b", "Sgk1", "Spon1", "Tac1", "Tshz1", "Wfs1", "Drd1")
+
+for(i in 1:length(genes)){
+  p <- FeaturePlot(object = spatial.data, reduction = "umap_after_harmony", features = genes[i], pt.size = 0.2, cols = heatmap.cl)
+  ggsave(plot = p, filename = paste(indir, "/markers/UMAPs/striatal/one_full_umap/", genes[i], ".pdf", sep = ""), height = 10, width = 12, dpi = 300)
+}
+```
+
+#### All spots but split by condition for 2 UMAPs
+```{r}
+genes <- c("Adora2a", "Cnr1", "Col6a1", "Crym", "Dlk1", "Drd2", "Epha4", "Gpr155", "Id4", "Kremen1", "Lypd1", "Oprm1", "Sema5b", "Sgk1", "Spon1", "Tac1", "Tshz1", "Wfs1")
+
+for(i in 1:length(genes)){
+  p <- FeaturePlot(object = spatial.data, reduction = "umap_after_harmony", features = genes[i], pt.size = 0.2, cols = heatmap.cl, split.by = "sample_type")
+  ggsave(plot = p, filename = paste(indir, "/markers/UMAPs/striatal/split_condition/", genes[i], ".pdf", sep = ""), height = 10, width = 20, dpi = 300)
+}
+```
+
+### Cortex
+
+#### All spots in one UMAP
+```{r}
+genes <- c("Slc17a6", "Slc17a7", "Rbp4", "Tlx3", "Pvalb", "Npy", "Chat", "Cux2")
+
+for(i in 1:length(genes)){
+  p <- FeaturePlot(object = spatial.data, reduction = "umap_after_harmony", features = genes[i], pt.size = 0.2, cols = heatmap.cl)
+  ggsave(plot = p, filename = paste(indir, "/markers/UMAPs/cortex/one_full_umap/", genes[i], ".pdf", sep = ""), height = 10, width = 12, dpi = 300)
+}
+```
+
+#### All spots but split by condition for 2 UMAPs
+```{r}
+genes <- c("Slc17a6", "Slc17a7", "Rbp4", "Tlx3", "Pvalb", "Npy", "Chat", "Cux2")
+
+for(i in 1:length(genes)){
+  p <- FeaturePlot(object = spatial.data, reduction = "umap_after_harmony", features = genes[i], pt.size = 0.2, cols = heatmap.cl, split.by = "sample_type")
+  ggsave(plot = p, filename = paste(indir, "/markers/UMAPs/cortex/split_condition/", genes[i], ".pdf", sep = ""), height = 10, width = 20, dpi = 300)
+}
+```
+
+## Glia
+```{r}
+genes <- c("Mbp","Tnc","Cx3cr1","Slc1a3","Pdgfra","Gfap")
+
+for(i in 1:length(genes)){
+  p <- FeaturePlot(object = spatial.data, reduction = "umap_after_harmony", features = genes[i], pt.size = 0.2, cols = heatmap.cl)
+  ggsave(plot = p, filename = paste(indir, "/markers/UMAPs/glia/one_full_umap/", genes[i], ".pdf", sep = ""), height = 10, width = 12, dpi = 300)
+}
+```
+
+## Split by condition
+```{r}
+genes <- c("Mbp","Tnc","Cx3cr1","Slc1a3","Pdgfra","Gfap")
+
+for(i in 1:length(genes)){
+  p <- FeaturePlot(object = spatial.data, reduction = "umap_after_harmony", features = genes[i], pt.size = 0.2, cols = heatmap.cl, split.by = "sample_type")
+  ggsave(plot = p, filename = paste(indir, "/markers/UMAPs/cortex/split_condition/", genes[i], ".pdf", sep = ""), height = 10, width = 20, dpi = 300)
+}
+```

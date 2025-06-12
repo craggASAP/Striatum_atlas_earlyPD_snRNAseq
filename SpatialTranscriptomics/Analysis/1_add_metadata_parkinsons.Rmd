@@ -1,0 +1,152 @@
+---
+title: "Load counts matrices and add metadata"
+author: "Yuvarani Masarapu"
+date: "8/4/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=16, fig.height=12, warning=FALSE, message=FALSE)
+```
+
+
+```{r echo=FALSE, message=FALSE, verbose=FALSE, warning=FALSE}
+# R markdown script to load counts into a list of seurat objects, and
+# add metadata columns to each object.
+
+### Loading package libraries
+
+library(Seurat)
+library(SeuratObject)
+#hdfr to read 10x hdfr files
+library(hdf5r)
+library(readr)
+library(readxl)
+library(ggplot2)
+```
+
+
+```{r warning=FALSE,eval=FALSE, echo=FALSE}
+### Load processed data (outputs from spaceranger) into seurat
+#path to the directory where count matrices for each sample reside
+data_dir <- "/Users/yuvarani.masarapu/Documents/parkinsons_project/samples_data"
+
+data.list <- list.files(data_dir, recursive = F, full.names = T)
+
+#iterate through all folders in data.list to load count matrices and images
+data.object <- lapply(data.list, function(folder){
+  each.object <- Load10X_Spatial(data.dir = folder)
+})
+
+rm(data_dir, data.list)
+```
+
+
+```{r echo=FALSE, eval=FALSE}
+### Add metadata
+dir <- getwd()
+brain_metadata <- read_excel(paste(dir, "/Parkinsons_SamplesInfo.xlsx", sep = ""))
+```
+
+```{r echo=FALSE, eval=FALSE}
+for (data in 1:length(data.object)){
+  
+  #create metadata columns for each sample object
+  sample_type = c(rep(brain_metadata$Type[data],length(rownames(data.object[[data]]@meta.data))))
+  tissue = c(rep(brain_metadata$Tissue[data],length(rownames(data.object[[data]]@meta.data))))
+  sub_array = c(rep(brain_metadata$Subarray[data],length(rownames(data.object[[data]]@meta.data))))
+  sectioning_level = c(rep(brain_metadata$SectioningLevel[data],length(rownames(data.object[[data]]@meta.data))))
+  slide_id = c(rep(brain_metadata$Slide[data], length(rownames(data.object[[data]]@meta.data))))
+  sample_id = c(rep(brain_metadata$SampleID[data], length(rownames(data.object[[data]]@meta.data))))
+  organism = c(rep(brain_metadata$Organism[data], length(rownames(data.object[[data]]@meta.data))))
+  region = c(rep(brain_metadata$Region[data],length(rownames(data.object[[data]]@meta.data))))
+  dosage = c(rep(brain_metadata$`Dosage (injected)`[data],length(rownames(data.object[[data]]@meta.data))))
+  
+  #convert to named vectors
+  names(sample_type) <- rownames(data.object[[data]]@meta.data)
+  names(tissue) <- rownames(data.object[[data]]@meta.data)
+  names(sub_array) <- rownames(data.object[[data]]@meta.data)
+  names(sectioning_level) <- rownames(data.object[[data]]@meta.data)
+  names(slide_id) <- rownames(data.object[[data]]@meta.data)
+  names(sample_id) <- rownames(data.object[[data]]@meta.data)
+  names(organism) <- rownames(data.object[[data]]@meta.data)
+  names(region) <- rownames(data.object[[data]]@meta.data)
+  names(dosage) <- rownames(data.object[[data]]@meta.data)
+  
+  #add metadata columns to corresponding sample object
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = sample_type, col.name = "sample_type")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = tissue, col.name = "tissue")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = sub_array, col.name = "sub_array")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = sectioning_level, col.name = "sectioning_level")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = slide_id, col.name = "slide_id")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = sample_id, col.name = "sample_id")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = organism, col.name = "organism")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = region, col.name = "region")
+  data.object[[data]] <- AddMetaData(object = data.object[[data]], metadata = dosage, col.name = "dosage")
+  
+  rm(sample_type, tissue, sub_array, sectioning_level, slide_id, sample_id, organism, region, dosage)
+}
+
+rm(data)
+```
+
+
+```{r echo=FALSE, eval=FALSE}
+Plots for MARTA
+p = SpatialFeaturePlot(object = data.object[[1]], features = "nFeature_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Control 1 - V11D08-305-A1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "control1_genes.pdf", dpi = 300, width = 14, height = 14)
+
+p = SpatialFeaturePlot(object = data.object[[2]], features = "nFeature_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Control 2 - V11D08-306-D1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "control2_genes.pdf", dpi = 300, width = 14, height = 14)
+
+p = SpatialFeaturePlot(object = data.object[[3]], features = "nFeature_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Treated 1 (Dosage 0.6) - V11D08-305-C1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "treated1_genes.pdf", dpi = 300, width = 14, height = 14)
+
+p = SpatialFeaturePlot(object = data.object[[4]], features = "nFeature_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Treated 2 (Dosage 0.6) - V11D08-306-B1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "treated2_genes.pdf", dpi = 300, width = 14, height = 14)
+```
+
+```{r}
+#order so first treated and then control samples
+brain_metadata$sno <- c(1:24)
+brain_metadata$sno[brain_metadata$Type %in% "Treated"]
+
+new_order <- c(brain_metadata$sno[brain_metadata$Type %in% "Treated"], brain_metadata$sno[brain_metadata$Type %in% "Control"])
+data.object <- data.object[new_order]
+
+#from above
+#new_order <- c(3  4  5  6  9 11 14 16 19 20 21 22  1  2  7  8 10 12 13 15 17 18 23 24)
+```
+
+### Genes/spot distribution on tissue
+```{r fig.show="hold", out.width="25%", fig.height=6, fig.width=6}
+lapply(data.object, function(obj){
+  p <- SpatialFeaturePlot(object = obj, features = "nFeature_Spatial", crop = F, pt.size.factor = 1, stroke = 0, images = "slice1") + ggtitle(paste(unique(obj$sample_type)," ID: ", unique(obj$sample_id), " (Sect. Level ", unique(obj$sectioning_level) , ")" ,sep = "" )) + theme(plot.title = element_text(size = 15, hjust = 0.5), title = element_text(size = 10), legend.key.size = unit(7, units = "mm"), legend.text = element_text(size = 8), legend.direction = "vertical", legend.position = "right")
+})
+```
+
+### UMI/spot distribution on tissue
+```{r fig.show="hold", out.width="25%", fig.height=6, fig.width=6}
+lapply(data.object, function(obj){
+  p <- SpatialFeaturePlot(object = obj, features = "nCount_Spatial", crop = F, pt.size.factor = 1, stroke = 0, images = "slice1") + ggtitle(paste(unique(obj$sample_type)," ID: ", unique(obj$sample_id), " (Sect. Level ", unique(obj$sectioning_level) , ")" ,sep = "" )) + theme(plot.title = element_text(size = 15, hjust = 0.5), title = element_text(size = 10), legend.key.size = unit(7, units = "mm"), legend.text = element_text(size = 8), legend.direction = "vertical", legend.position = "right")
+})
+```
+
+```{r eval=FALSE, echo=FALSE}
+p = SpatialFeaturePlot(object = data.object[[1]], features = "nCount_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Control 1 - V11D08-305-A1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "control1_UMI.pdf", dpi = 300, width = 14, height = 14)
+
+p = SpatialFeaturePlot(object = data.object[[2]], features = "nCount_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Control 2 - V11D08-306-D1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "control2_UMI.pdf", dpi = 300, width = 14, height = 14)
+
+p = SpatialFeaturePlot(object = data.object[[3]], features = "nCount_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Treated 1 (Dosage 0.6) - V11D08-305-C1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "treated1_UMI.pdf", dpi = 300, width = 14, height = 14)
+
+p = SpatialFeaturePlot(object = data.object[[4]], features = "nCount_Spatial", crop = F, pt.size.factor = 1, stroke = 0) + ggtitle("Treated 2 (Dosage 0.6) - V11D08-306-B1") + theme(plot.title = element_text(size = 40, hjust = 0.5), title = element_text(size = 30), legend.key.size = unit(25, units = "mm"), legend.text = element_text(size = 20), legend.direction = "vertical", legend.position = "right")
+ggsave(p, filename = "treated2_UMI.pdf", dpi = 300, width = 14, height = 14)
+```
+
+```{r}
+saveRDS(data.object, file = "data.unfilt.rds")
+```
+

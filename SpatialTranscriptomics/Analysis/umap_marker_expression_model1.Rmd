@@ -1,0 +1,48 @@
+---
+title: "UMAP for marker expression"
+author: "Yuvarani Masarapu"
+date: "2022-11-22"
+output: html_document
+---
+
+```{r}
+library(SeuratObject)
+library(Seurat)
+library(harmony)
+library(sctransform)
+library(Matrix)
+library(RColorBrewer)
+library(ggplot2)
+```
+
+```{r}
+data.object.filter.norm.integrated <- readRDS("~/Documents/parkinsons_project/analysis-parkinsons/data.integrated.clusters_2022-08-22.rds")
+```
+
+```{r}
+new_genes<- c("Bc1", "Rgs2", "Tac1", "Col11a1", "Avp", "Nr4a1", "Egr1", "Arc", "Cldn11", "Lars2", "Enpp2", "Ptgds", "Cck", "Calb1")
+new_genes <- unique(new_genes)
+
+markers <- c("Sema5b", "Kremen1", "Tac1", "Spon1", "Tshz1", "Lypd1", "Oprm1", "Id4", "Sgk1", "Epha4", "Col6a1", "Crym" ,"Wfs1", "Dlk1", "Gpr155", "Cnr1", "Drd2", "Adora2a")
+markers <- unique(markers)
+
+all.genes <- union(new_genes, markers)
+```
+
+```{r}
+indir <- getwd()
+indir
+
+plots.dir <- paste(indir, "/umaps_markers/treated_vs_control_umaps", sep = "")
+plots.dir
+```
+
+```{r}
+lapply(all.genes, function(gene){
+  p <- FeaturePlot(data.object.filter.norm.integrated, features = gene, slot = "data", split.by = "sample_type", reduction = "umap_after_harmony") & theme(legend.position = c(0.9,0.9))
+  ggsave(p, filename = paste(plots.dir, "/", gene, "_treated_control.pdf", sep = ""), dpi = 300, width = 16, height = 8)
+})
+```
+
+
+

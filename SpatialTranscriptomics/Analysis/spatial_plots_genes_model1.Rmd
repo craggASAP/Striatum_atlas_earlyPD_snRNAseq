@@ -1,0 +1,80 @@
+---
+title: "Spatial plots for DE genes"
+author: "Yuvarani Masarapu"
+date: "2022-11-24"
+output: html_document
+---
+
+```{r}
+library(SeuratObject)
+library(Seurat)
+library(harmony)
+library(sctransform)
+library(Matrix)
+library(RColorBrewer)
+library(ggplot2)
+```
+
+```{r}
+data.object.filter.norm.integrated <- readRDS("~/Documents/parkinsons_project/model2_analysis/data.integrated.final.rds")
+```
+
+```{r}
+new_genes <- c("Snca", "Pcsk1n", "Bc1", "Ttr", "Penk", "Tesc", "Fth1", "Malat1", "Cartpt", "Scand1", "Slc1a2", "Ptgds", "Avp", "Oxt", "Cxcl14", "Lars2", "Nenf", "Sst", "Gal", "Cox8a")
+new_genes <- unique(new_genes)
+
+markers <- c("Sema5b", "Kremen1", "Tac1", "Spon1", "Tshz1", "Lypd1", "Oprm1", "Id4", "Sgk1", "Epha4", "Col6a1", "Crym" ,"Wfs1", "Dlk1", "Gpr155", "Cnr1", "Drd2", "Adora2a")
+markers <- unique(markers)
+
+all.genes <- union(new_genes, markers)
+```
+
+```{r}
+images <- c("slice1", "slice1.1", "slice1.2", "slice1.3", "slice1.4", "slice1.5", "slice1.6", "slice1.7", "slice1.8", "slice1.9", "slice1.10", "slice1.11",
+            "slice1.12","slice1.13","slice1.14","slice1.15","slice1.16","slice1.17", "slice1.18", "slice1.19", "slice1.20", "slice1.21", "slice1.22", "slice1.23")
+sample_type <- c(rep("Treated", 12), rep("Control", 12))
+sample_name <- unique(data.object.filter.norm.integrated$sample_id)
+```
+
+
+```{r}
+out.dir <- paste(indir, "/spatial-plots", sep = "")
+dir.create(out.dir)
+genes <- all.genes
+library(RColorBrewer)
+blues = brewer.pal(9, "Blues")
+
+for(j in 1:length(genes)){
+  
+  temp = data.object.filter.norm.integrated[rownames(data.object.filter.norm.integrated) %in% genes[j], ]
+  temp = temp[,temp$nCount_Spatial >0]
+  min <- floor(min(temp@assays$SCT@data))
+  max <- floor(max(temp@assays$SCT@data))
+  
+  if(rownames(temp) %in% genes[j]){
+    
+    dir.create(paste(out.dir, "/", genes[j], sep = ""))
+    for(i in 1:length(sample_name)){
+      p = SpatialFeaturePlot(object = temp, features = genes[j], images = images[i], pt.size.factor = 0.9, stroke = 0, crop = F) + 
+        scale_fill_gradientn(colors = blues[c(1,3,6,7,9)], limits = c(min,max)) +
+        theme(legend.position = "right",
+              plot.title = element_text(hjust = 0.5, face = "bold")) +
+        ggtitle(paste(genes[j], " expression: Sample " ,sample_name[i], "_", sample_type[i], sep = ""))
+    ggsave(p, filename = paste(out.dir, "/", genes[j], "/", genes[j] ,"_on_", sample_name[i], "_", sample_type[i],".pdf", sep = ""), dpi = 300)
+  }
+    
+}
+
+}
+
+#min(temp@assays$SCT@data)
+#max(temp@assays$SCT@data)
+
+#df <- FetchData(data.object.filter.norm.integrated, vars = genes[j])
+#floor(min(df[1]))
+#ceiling(max(df[1]))
+rm(p,i,j,temp,out.dir,reds,blues,min,max)
+rm(genes)
+rm(markers, new_genes)
+```
+

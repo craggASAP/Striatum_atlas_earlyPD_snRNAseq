@@ -1,0 +1,113 @@
+---
+title: "QC and filtering"
+author: "Yuvarani Masarapu"
+date: "8/4/2022"
+output: html_document
+---
+
+### Loading package libraries
+```{r message=FALSE, warning=FALSE, verbose=FALSE}
+library(SeuratObject)
+library(Seurat)
+library(ggplot2)
+library(Matrix)
+```
+
+```{r eval=FALSE, echo=FALSE}
+data.object = readRDS(file = "data.unfilt.rds")
+```
+
+```{r echo=FALSE}
+data.object.merged <- merge(data.object[[1]], y = data.object[2:length(data.object)], add.cell.ids = new_order, project = "parkinsons")
+```
+
+### Before Filtering: UMI (nCount) and Genes (nFeatures) distribution across the samples
+
+```{r fig.show="hold", out.width="50%", fig.height=5, fig.width=8, echo=FALSE}
+#lapply(data.object.filter, function(eachObj){
+#  VlnPlot(eachObj, features = c("nFeature_Spatial", "nCount_Spatial"), ncol = 2, pt.size = 0.1)
+#})
+
+VlnPlot(data.object.merged, features = "nFeature_Spatial",  pt.size = 0.1, group.by = "sample_type")
+VlnPlot(data.object.merged, features = "nFeature_Spatial",  pt.size = 0.1, group.by = "sample_id")
+
+VlnPlot(data.object.merged, features = "nCount_Spatial", pt.size = 0.1, group.by = "sample_type")
+VlnPlot(data.object.merged, features = "nCount_Spatial", pt.size = 0.1, group.by = "sample_id")
+
+rm(data.object.merged)
+```
+
+### After Filtering
+
+  * Filtering Mitochondrial genes
+
+```{r echo=FALSE}
+data.object.filter <- lapply(data.object, function(obj){
+  mt.genes <- grep(pattern = "^mt-", x = rownames(obj), value = T)
+  rb.genes <- grep(pattern = "^Rp[sl]", x = rownames(obj), value = T)
+  hb.genes <- grep(pattern = "^Hb", x = rownames(obj), value = T)
+  obj <- obj[!rownames(obj) %in% mt.genes, ]
+  obj <- obj[!rownames(obj) %in% rb.genes, ]
+  obj <- obj[!rownames(obj) %in% hb.genes, ]
+})
+```
+
+
+```{r echo=FALSE}
+# * Number of genes detected per UMI for each spot in the data
+for(index in 1:length(data.object.filter)){
+  
+  data.object.filter[[index]]$log10GenesPerUMI<-log10(data.object.filter[[index]]$nFeature_Spatial) / log10(data.object.filter[[index]]$nCount_Spatial) 
+}
+```
+
+* Spot-level filtering: keeping spots with, 
+  * nGene per spot > 200
+  * nUMI per spot > 100
+  
+```{r echo=FALSE}
+#* log10GenesPerUMI or genes/UMI ratio > 0.87 - Nope
+data.object.filter2 <- lapply(data.object.filter, function(obj){
+  obj = obj[rowSums(obj) > 0, 
+            (obj$nCount_Spatial > 100) & (obj$nFeature_Spatial > 200)]
+})
+
+rm(data.object.filter)
+```
+
+* After filtering
+
+```{r echo=FALSE}
+data.object.merged <- merge(data.object.filter2[[1]], y = data.object.filter2[2:length(data.object.filter2)], add.cell.ids = new_order, project = "parkinsons")
+```
+
+
+```{r eval=FALSE, echo=FALSE}
+#lapply(data.object.filter2, function(eachObj){
+#  VlnPlot(eachObj, features = c("nFeature_Spatial", "nCount_Spatial"), ncol = 2, pt.size = 0.1)
+#})
+
+#lapply(data.object.filter2, function(obj){
+#   SpatialPlot(obj, features = c("nFeature_Spatial","nCount_Spatial"))
+#})
+```
+
+```{r fig.show="hold", out.width="50%", fig.height=5, fig.width=8, echo=FALSE}
+#lapply(data.object.filter, function(eachObj){
+#  VlnPlot(eachObj, features = c("nFeature_Spatial", "nCount_Spatial"), ncol = 2, pt.size = 0.1)
+#})
+
+VlnPlot(data.object.merged, features = "nFeature_Spatial", pt.size = 0.1, group.by = "sample_type")
+VlnPlot(data.object.merged, features = "nFeature_Spatial", pt.size = 0.1, group.by = "sample_id")
+
+VlnPlot(data.object.merged, features = "nCount_Spatial", pt.size = 0.1, group.by = "sample_type")
+VlnPlot(data.object.merged, features = "nCount_Spatial", pt.size = 0.1, group.by = "sample_id")
+
+rm(data.object.merged)
+```
+
+```{r echo=FALSE}
+saveRDS(data.object.filter2, file = "data.filt.rds")
+```
+
+

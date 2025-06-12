@@ -1,0 +1,114 @@
+---
+title: "Plots for Marta's poster"
+author: "Yuvarani Masarapu"
+date: '2022-08-25'
+output: html_document
+---
+
+```{r}
+library(SeuratObject)
+library(Seurat)
+library(harmony)
+library(sctransform)
+library(Matrix)
+library(RColorBrewer)
+library(ggplot2)
+```
+
+### Load filtered seurat object
+```{r}
+dir <- getwd()
+
+data.object.filter.norm.integrated <- readRDS(file = paste(dir, "/data.integrated.clusters_2022-08-22.rds", sep = ""))
+```
+
+```{r}
+genes_from_marta <- c("Bc1", "Rgs2", "Tac1", "Col11a1", "Avp", "Nr4a1", "Egr1", "Arc", "Cldn11", "Lars2", "Enpp2", "Ptgds", "Cck", "Calb1")
+
+genes_from_marta %in% rownames(data.object.filter.norm.integrated)
+```
+
+UMAPs 
+```{r}
+lapply(genes_from_marta, function(gene){
+  p <- FeaturePlot(object = data.object.filter.norm.integrated, features = gene, reduction = "umap_after_harmony", pt.size = 0.8)
+  ggsave(p, filename = paste(dir, "/plots_poster/umaps/", gene, "_expression_UMAP.pdf", sep = ""), dpi = 300, width = 14, height = 14)
+})
+
+lapply(genes_from_marta, function(gene){
+  p1 <- FeaturePlot(object = data.object.filter.norm.integrated, features = gene, reduction = "umap_after_harmony", pt.size = 0.8, cells = colnames(data.object.filter.norm.integrated)[data.object.filter.norm.integrated$sample_type %in% "Treated"]) + ggtitle(paste(gene, "in Treated"))
+  p2 <- FeaturePlot(object = data.object.filter.norm.integrated, features = gene, reduction = "umap_after_harmony", pt.size = 0.8, cells = colnames(data.object.filter.norm.integrated)[data.object.filter.norm.integrated$sample_type %in% "Control"]) + ggtitle(paste(gene, "in Control"))
+  p <- cowplot::plot_grid(plotlist =  list(p1,p2), nrow = 1, ncol = 2)
+  ggsave(p, filename = paste(dir, "/plots_poster/umaps/", gene, "_UMAP_Treated_vs_Ctrl.pdf", sep = ""), dpi = 300, width = 20, height = 10)
+})
+```
+
+Spatial heatmaps of gene expression
+```{r}
+#order of images for samples
+#first treated, then controls
+images <- c("slice1", "slice1.1", "slice1.2", "slice1.3", "slice1.6", "slice1.7", "slice1.12", "slice1.13", "slice1.18", "slice1.19", "slice1.20", "slice1.21",
+            "slice1.4","slice1.5","slice1.8","slice1.9","slice1.10","slice1.11", "slice1.14", "slice1.15", "slice1.16", "slice1.17", "slice1.22", "slice1.23")
+sample_type <- c(rep("Treated", 12), rep("Control", 12))
+sample_name <- c("V11D06-099_A1","V11D06-099_C1","V11D08-305_C1","V11D08-306_A1","V11D06-069_D1","V11D06-100_D1","V11D06-070_A1","V11D06-070_B1","V11D06-069_C1","V11D06-100_B1","V11D08-305_D1","V11D08-306_B1",
+                 "V11D06-100_A1","V11D08-305_A1","V11D06-069_A1","V11D06-070_C1","V11D06-099_B1","V11D06-099_D1","V11D06-069_B1","V11D06-070_D1","V11D06-100_C1","V11D08-305_B1","V11D08-306_C1","V11D08-306_D1")
+
+dir <- getwd()
+lapply(genes_from_marta, function(gene){
+  
+  dir.create(path = paste(dir, "/plots_poster/spatial_heatmaps/", gene, sep = ""))
+  for(i in 1:length(images)){
+    p <- SpatialFeaturePlot(object = data.object.filter.norm.integrated, features = gene, crop = F, pt.size.factor = 0.8, stroke = 0, images = images[i], image.alpha = 0) +
+    ggtitle(paste(unique(sample_type[i])," ID: ", unique(sample_name[i]),sep = "" )) + 
+    theme(plot.title = element_text(size = 40, hjust = 0.5), 
+          title = element_text(size = 30), 
+          legend.key.size = unit(10, units = "mm"),
+          legend.text = element_text(size = 20), 
+          legend.direction = "vertical", 
+          legend.position = "right", 
+          legend.key = element_rect(size = 50), 
+          legend.key.height = unit(12, units = "mm"))
+    ggsave(p, filename = paste(dir, "/plots_poster/spatial_heatmaps/", gene, "/" ,sample_name[i], "_", gene, "_exp.pdf", sep = ""), dpi = 300, width = 14, height = 14)
+  }
+})
+```
+
+```{r}
+reds <- RColorBrewer::brewer.pal(n = 9, name = "Reds")
+p <- DotPlot(object = data.object.filter.norm.integrated, features = genes_from_marta, group.by = "seurat_clusters", cols = reds[c(1,7,9)]) + coord_flip() + ggtitle("Expression of genes in each cluster")
+ggsave(p, filename = paste(dir, "/plots_poster/dotplots/", "dotplot_exp_in_clusters.pdf", sep = ""), dpi = 300, width = 10, height = 8)
+```
+
+
+```{r}
+unique(data.object.filter.norm.integrated$sample_id)
+colnames(data.object.filter.norm.integrated)[data.object.filter.norm.integrated$sample_id %in% "V11D06-069_A1"]
+```
+
+
+```{r}
+#sample_type <- c(rep("Treated", 12), rep("Control", 12))
+sample_name <- c("V11D06-099_A1","V11D06-099_C1","V11D08-305_C1","V11D08-306_A1","V11D06-069_D1","V11D06-100_D1","V11D06-070_A1","V11D06-070_B1","V11D06-069_C1","V11D06-100_B1","V11D08-305_D1","V11D08-306_B1",
+                 "V11D06-100_A1","V11D08-305_A1","V11D06-069_A1","V11D06-070_C1","V11D06-099_B1","V11D06-099_D1","V11D06-069_B1","V11D06-070_D1","V11D06-100_C1","V11D08-305_B1","V11D08-306_C1","V11D08-306_D1")
+sample_order <- c("T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", 
+                  "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12")
+```
+
+
+```{r}
+data.object.filter.norm.integrated$sample_order_TC <- colnames(data.object.filter.norm.integrated)
+
+for(i in 1:length(sample_name)){
+  data.object.filter.norm.integrated$sample_order_TC[data.object.filter.norm.integrated$sample_id %in% sample_name[i]] <- sample_order[i]  
+}
+
+unique(data.object.filter.norm.integrated$sample_id)
+unique(data.object.filter.norm.integrated$sample_order_TC)
+
+p <- DotPlot(object = data.object.filter.norm.integrated, features = genes_from_marta, group.by = "sample_order_TC", cols = reds[c(1,7,9)]) + coord_flip() + ggtitle("Expression of genes in each sample")
+ggsave(p, filename = paste(dir, "/plots_poster/dotplots/", "dotplot_exp_per_sample.pdf", sep = ""), dpi = 300, width = 10, height = 7)
+
+p <- DotPlot(object = data.object.filter.norm.integrated, features = genes_from_marta, group.by = "sample_type", cols = reds[c(1,7,9)]) + coord_flip() + ggtitle("all treated vs all control")
+ggsave(p, filename = paste(dir, "/plots_poster/dotplots/", "dotplot_exp_T_vs_C.pdf", sep = ""), dpi = 300, width = 5, height = 6)
+```
+
