@@ -11,7 +11,7 @@
 * [System Requirements](#system-requirements)
 * [Hardware Requirements](#hardware-requirements)
 * [Folder Structure](#folder-structure)
-* [Data Availability](#data-availabilty)
+* [Data Availability](#data-availability)
 * [License and citation](#license-and-citation)
 * [Acknowledgements](#acknowledgements)
 
