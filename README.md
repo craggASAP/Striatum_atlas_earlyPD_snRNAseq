@@ -46,45 +46,45 @@ The computational requirements to run the analyses are well within the capacity 
 The repository is organized as follows:
 
 - Folder **snRNA_seq/** contains scripts to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of single-cell RNA sequencing data obtained from Chromium technology:
-    - **cellXgene**: Python and R scripts to format and convert the data for [CellXGene](https://cellxgene.cziscience.com/) resource.
+    - **cellXgene/**: Python and R scripts to format and convert the data for [CZ CELLxGENE Discover](https://cellxgene.cziscience.com/) platform.
         - **cellXgene/gene_matrix_creation_for_mapmycell.ipynb**
         - **cellXgene/Dataset_fix_for_cellxgene_mouse.R**
         - **cellXgene/Dataset_fix_for_cellxgene_human.R**
-    - **MapMyCell**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)
-        - **MapMyCell/gene_matrix_creation_for_mapmycell.ipynb**).
-    - **Mouse datasets**: R scripts to analyze and generate plots using mouse full datasets shown in Figure 1 and 2, and mouse subclustering datasets shown in Figure 3.
+    - **/MapMyCell/**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)
+        - **MapMyCell/gene_matrix_creation_for_mapmycell.ipynb**.
+    - **/Mouse datasets/**: R scripts to analyse and generate plots using mouse full datasets shown in Figure 1 and 2, and mouse subclustering datasets shown in Figure 3.
         - **Mouse Datasets/Analysis_full_dataset**
         - **Mouse Datasets/Sub_clustering_SPNs_mouse**
-    - **Human datasets**: R scripts to analyze and generate plots for human full datasets shown in Figure 1 and 5, and human subclustering datasets shown in Figure 6.
-        - ****Human Datasets/Sub_clustering_SPNs_human**
+    - **/Human datasets/**: R scripts to analyse and generate plots for human full datasets shown in Figure 1 and 5, and human subclustering datasets shown in Figure 6.
         - **Human Datasets/Sub_clustering_SPNs_human**
-    - **Cell_Ranger**: Shell scripts (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)) to generate gene count matrices using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0).
+        - **Human Datasets/Sub_clustering_SPNs_human**
+    - **/Cell_Ranger/**: Shell scripts (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)) to generate gene count matrices using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0).
         - **Cell_Ranger/cellranger_run_loop.sh**
         - **Cell_Ranger/run_cr_230619.sh**
-        - **CellRanger/run_cr_count_2023-06-26.sh**
+        - **Cell_Ranger/run_cr_count_2023-06-26.sh**
  
-- Folder **SpatialTranscriptomics** contains scripts (also available[here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of spatial transcriptomic data obtained from Visium technology:
-    - **Space_Ranger**: Shell scripts to generate gene count matrices using the 10x Genomics Space Ranger pipeline (10x Genomics Space Ranger v1.3.1).
-        - **run_spaceranger.sh**
-        - **run_all_sr_setup.sh**
-        - **example_spaceranger_run.sh**
-    - **Analysis**: R scripts to analyse mouse and human datasets.
-        - **1_add_metadata_parkinsons.Rmd**
-        - **2_quality_check_filtering_parkinsons.Rmd**
-        - **3_normalisation_parkinsons.Rmd**
-        - **4_clusterin_analysis_main_parkinsons.Rmd**
-    - **Plots**: R scripts to generate plots shown in Figure 4.
-        - **ST_figures_parkinsons_6OHDA.Rmd**
-        - **ST_figures_parkinsons_6OHDA_from-subclusters.Rmd**
+- Folder **SpatialTranscriptomics/** contains scripts (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of spatial transcriptomic data obtained from Visium technology:
+    - **/Space_Ranger/**: Shell scripts to generate gene count matrices using the 10x Genomics Space Ranger pipeline (10x Genomics Space Ranger v1.3.1).
+        - **Space_Ranger/run_spaceranger.sh**
+        - **Space_Ranger/run_all_sr_setup.sh**
+        - **Space_Ranger/example_spaceranger_run.sh**
+    - **/Analysis/**: R scripts to analyse mouse and human datasets.
+        - **Analysis/1_add_metadata_parkinsons.Rmd**
+        - **Analysis/2_quality_check_filtering_parkinsons.Rmd**
+        - **Analysis/3_normalisation_parkinsons.Rmd**
+        - **Analysis/4_clusterin_analysis_main_parkinsons.Rmd**
+    - **/Plots/**: R scripts to generate plots shown in Figure 4.
+        - **Plots/ST_figures_parkinsons_6OHDA.Rmd**
+        - **Plots/ST_figures_parkinsons_6OHDA_from-subclusters.Rmd**
 
-- Folder **Trajectory_Inference** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets. The input file is a sceGAM object obtained from the tradeSeq algorithm which performs a trajectory differential expression analysis.
-    - **Trajectory analysis human.R**
-    - **Trajectory analysis mouse.R**
+- Folder **Trajectory_Inference/** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets.
+    - **Trajectory_Inference/Trajectory analysis human.R**
+    - **Trajectory_Inference/Trajectory analysis mouse.R**
  
 ------------------
 ## Data Availability
 
-The raw mouse sequencing data (ST and snRNA-seq) will be available on the [ASAP CRN Cloud](https://cloud.parkinsonsroadmap.org/collections) repository. The same repository already hosts the raw data for the human postmortem sequencing dataset (available [here](https://cloud.parkinsonsroadmap.org/collections/jakobsson-20/overview)). Processed matrices and analyzed datasets for snRNA seq will be available on the CellXGene platform upon publication.
+The raw mouse sequencing data (ST and snRNA-seq) will be available on the [ASAP CRN Cloud](https://cloud.parkinsonsroadmap.org/collections) repository. The same repository already hosts the raw data for the human postmortem sequencing dataset (available [here](https://cloud.parkinsonsroadmap.org/collections/jakobsson-20/overview)). Processed matrices and analyzed datasets for snRNA seq will be available on the CZ CELLxGENE Discover platform upon publication.
 
 Detailed information on which raw mouse or human data and associated scripts were used for each figure shown in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum" can be found in [Zenodo](https://doi.org/10.5281/zenodo.15065317). 
 
