@@ -1,0 +1,37 @@
+---
+title: "Normalisation"
+author: "Yuvarani Masarapu"
+date: "9/7/2021"
+output: html_document
+---
+
+```{r}
+library(SeuratObject)
+library(Seurat)
+library(sctransform)
+library(Matrix)
+library(RColorBrewer)
+library(Rcpp)
+library(glmGamPoi)
+
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("glmGamPoi")
+```
+
+### Load filtered seurat object
+```{r}
+data.object.filter2 <- readRDS(file = "data.object.filter2.rds")
+```
+
+
+### Normalisation and data integration
+```{r eval=FALSE}
+data.object.filter.norm <- lapply(data.object.filter2, function(obj.filt){
+  obj.filt <- SCTransform(object = obj.filt, assay = "Spatial", method = "glmGamPoi", verbose = FALSE, return.only.var.genes = F, vars.to.regress = c("nFeature_Spatial"), seed.use = 67)
+})
+
+saveRDS(data.object.filter.norm, file = "parkinsons_brain_norm.rds")
+```
+
