@@ -11,14 +11,14 @@
 * [System Requirements](#system-requirements)
 * [Hardware Requirements](#hardware-requirements)
 * [Folder Structure](#folder-structure)
-* [Data Availability](#data-availabilty)
+* [Data_Availability](#data-availabilty)
 * [License and citation](#license-and-citation)
 * [Acknowledgements](#acknowledgements)
 
 ------------------
 ## Project Overview
 
-This repository contains scripts used to (1) analyze and plot single-nucleus RNA sequencing (snRNA-seq) data for cell-specific transcriptomic changes in the striatum from Parkinson's Disease (PD) mouse models and human tissue; (2) analyze and plot spatial transcriptomics (ST) data to map regional vulnerabilities within the striatum, (3) perform differential expression and pseudotime trajectory analyses for specific cell types, particularly focusing on astrocytes, oligodendrocytes, and spiny projection neurons (SPNs); and (4) apply computational models for trajectory inference and pseudotime analyse. These scripts were custom-written by Marta Graziano from [Meletis Lab](https://ki.se/en/research/research-areas-centres-and-networks/research-groups/konstantinos-meletis-group#tab-research-focus) and Yuvarani Masarapu from [Giacomello Lab](https://www.spatialresearch.org/research-giacomello-lab/) and used in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum."
+This repository contains scripts used to (1) analyze and plot single-nucleus RNA sequencing (snRNA-seq) data for cell-specific transcriptomic changes in the striatum from Parkinson's Disease (PD) mouse models and human tissue; (2) analyze and plot spatial transcriptomics (ST) data to map regional vulnerabilities within the striatum, (3) perform differential expression and pseudotime trajectory analyses for specific cell types, particularly focusing on astrocytes, oligodendrocytes, and spiny projection neurons (SPNs); and (4) apply computational models for trajectory inference and pseudotime analyse. The scripts were custom-written by Marta Graziano from [Meletis Lab](https://ki.se/en/research/research-areas-centres-and-networks/research-groups/konstantinos-meletis-group#tab-research-focus) and Yuvarani Masarapu from [Giacomello Lab](https://www.spatialresearch.org/research-giacomello-lab/) and used in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum."
 
 ------------------
 ## System Requirements
@@ -45,16 +45,41 @@ The computational requirements to run the analyses are well within the capacity 
 
 The repository is organized as follows:
 
-- Folder **snRNA_seq/** contains scripts for <i>analyzing single-nucleus RNA sequencing data</i>:
-    - **cellXgene**: Python and R scripts used to format and convert the data for [CellXGene](https://cellxgene.cziscience.com/) resource (**cellXgene/gene_matrix_creation_for_mapmycell.ipynb**, **cellXgene/Dataset_fix_for_cellxgene_mouse.R** and **cellXgene/Dataset_fix_for_cellxgene_human.R**).
-    - **MapMyCell**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells) (**MapMyCell/gene_matrix_creation_for_mapmycell.ipynb**).
-    - **Mouse datasets**: R scripts to analize and generate figures using mouse full datasets (**Mouse Datasets/Analysis_full_dataset**) shown in Figure 1 and 2, and mouse subclustering datasets (**Mouse Datasets/Sub_clustering_SPNs_mouse**) shown in Figure 3.
-    - **Human datasets**: R scripts to analize and generate figures for human full datasets (**Human Datasets/Analysis_full_dataset**) shown in Figure 1 and 5, and human subclustering datasets (**Human Datasets/Sub_clustering_SPNs_human**) shown in Figure 6.
-    - **Cell_Ranger**: Shell scripts written by Yuvarani Masarapu from Giacomello Lab to generate gene count matrices of each sample obtained from Chromium single-cell experiments using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0) (**Cell_Ranger/cellranger_run_loop.sh**, **Cell_Ranger/run_cr_230619.sh**, **CellRanger/run_cr_count_2023-06-26.sh**) (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)).
+- Folder **snRNA_seq/** contains scripts to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of single-cell RNA sequencing data obtained from Chromium technology:
+    - **cellXgene**: Python and R scripts to format and convert the data for [CellXGene](https://cellxgene.cziscience.com/) resource.
+        - **cellXgene/gene_matrix_creation_for_mapmycell.ipynb**
+        - **cellXgene/Dataset_fix_for_cellxgene_mouse.R**
+        - **cellXgene/Dataset_fix_for_cellxgene_human.R**
+    - **MapMyCell**: Python script used to convert the expression matrix extracted from the seurat object to map the cells to Allen tool [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)
+        - **MapMyCell/gene_matrix_creation_for_mapmycell.ipynb**).
+    - **Mouse datasets**: R scripts to analyze and generate plots using mouse full datasets shown in Figure 1 and 2, and mouse subclustering datasets shown in Figure 3.
+        - **Mouse Datasets/Analysis_full_dataset**
+        - **Mouse Datasets/Sub_clustering_SPNs_mouse**
+    - **Human datasets**: R scripts to analyze and generate plots for human full datasets shown in Figure 1 and 5, and human subclustering datasets shown in Figure 6.
+        - ****Human Datasets/Sub_clustering_SPNs_human**
+        - **Human Datasets/Sub_clustering_SPNs_human**
+    - **Cell_Ranger**: Shell scripts (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)) to generate gene count matrices using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0).
+        - **Cell_Ranger/cellranger_run_loop.sh**
+        - **Cell_Ranger/run_cr_230619.sh**
+        - **CellRanger/run_cr_count_2023-06-26.sh**
  
-- Folder **SpatialTranscriptomics** contains scripts written by Yuvarani Masarapu from Giacomello Lab (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i> generate gene count matrices of each sequenced library </i> obtained from the Visium experiments using the 10x Genomics Space Ranger pipeline (10x Genomics Space Ranger v1.3.1) (**SpatialTranscriptomics/Space_Ranger**), <i> perform downstream analysis </i> in R (v4.1.3; later updated to v4.3.2) using the Seurat package50–54 (v5.0.1) (**SpatialTranscriptomics/Analysis**), and <i> generate plots shown in Figure 4 </i> (**SpatialTranscriptomics/Plots**).
+- Folder **SpatialTranscriptomics** contains scripts (also available[here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of spatial transcriptomic data obtained from Visium technology:
+    - **Space_Ranger**: Shell scripts to generate gene count matrices using the 10x Genomics Space Ranger pipeline (10x Genomics Space Ranger v1.3.1).
+        - **run_spaceranger.sh**
+        - **run_all_sr_setup.sh**
+        - **example_spaceranger_run.sh**
+    - **Analysis**: R scripts to analyse mouse and human datasets.
+        - **1_add_metadata_parkinsons.Rmd**
+        - **2_quality_check_filtering_parkinsons.Rmd**
+        - **3_normalisation_parkinsons.Rmd**
+        - **4_clusterin_analysis_main_parkinsons.Rmd**
+    - **Plots**: R scripts to generate plots shown in Figure 4.
+        - **ST_figures_parkinsons_6OHDA.Rmd**
+        - **ST_figures_parkinsons_6OHDA_from-subclusters.Rmd**
 
-- Folder **Trajectory_Inference/** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets. The input file is a sceGAM object obtained from the tradeSeq algorithm which performs a trajectory differential expression analysis.
+- Folder **Trajectory_Inference** contains R scripts for <i> pseudotime and trajectory analyses </i> for human and mouse datasets. The input file is a sceGAM object obtained from the tradeSeq algorithm which performs a trajectory differential expression analysis.
+    - **Trajectory analysis human.R**
+    - **Trajectory analysis mouse.R**
  
 ------------------
 ## Data Availability
