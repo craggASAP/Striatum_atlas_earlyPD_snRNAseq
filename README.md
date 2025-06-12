@@ -86,7 +86,7 @@ The repository is organized as follows:
 
 The raw mouse sequencing data (ST and snRNA-seq) will be available on the [ASAP CRN Cloud](https://cloud.parkinsonsroadmap.org/collections) repository. The same repository already hosts the raw data for the human postmortem sequencing dataset (available [here](https://cloud.parkinsonsroadmap.org/collections/jakobsson-20/overview)). Processed matrices and analyzed datasets for snRNA seq will be available on the CZ CELLxGENE Discover platform upon publication.
 
-Detailed information on which raw mouse or human data and associated scripts were used for each figure shown in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum" can be found in [Zenodo](https://doi.org/10.5281/zenodo.15065317). 
+Detailed information on which raw mouse or human data and associated scripts were used for each figure shown in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum" can be found in a README file at [Zenodo](https://doi.org/10.5281/zenodo.15065317). 
 
 ------------------
 ## License and Citation
