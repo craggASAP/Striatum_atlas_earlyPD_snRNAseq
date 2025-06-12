@@ -29,7 +29,7 @@ The code in this repository is designed to run on systems capable of supporting:
 - Required R Packages: libraries in the file library.R in the folder **snRNA seq/**
 - Python (version 3.8 or later)
 - Seurat (version 4.0.1 or later) for downstream data analysis
-- Unix-like system to run shell scripts
+- Unix-like system to run shell scripts for Cell Ranger and Space Ranger
 
 ------------------
 ## Hardware Requirements
@@ -59,7 +59,9 @@ The repository is organized as follows:
 ------------------
 ## Data Availability
 
-The raw mouse sequencing data (ST and snRNA-seq) generated for this manuscript will be available on the [ASAP CRN Cloud](https://cloud.parkinsonsroadmap.org/collections) repository. The same repository already hosts the raw data for the human postmortem dataset (accessible [here](https://cloud.parkinsonsroadmap.org/collections/jakobsson-20/overview)). Processed matrices and analyzed datasets for snRNA seq will be available on the CellXGene platform upon publication. 
+The raw mouse sequencing data (ST and snRNA-seq) will be available on the [ASAP CRN Cloud](https://cloud.parkinsonsroadmap.org/collections) repository. The same repository already hosts the raw data for the human postmortem sequencing dataset (available [here](https://cloud.parkinsonsroadmap.org/collections/jakobsson-20/overview)). Processed matrices and analyzed datasets for snRNA seq will be available on the CellXGene platform upon publication.
+
+Detailed information on which raw mouse or human data and associated scripts were used for each figure shown in the study "A molecular atlas of cell types in the mouse and human parkinsonian striatum" can be found in [Zenodo](https://doi.org/10.5281/zenodo.15065317). 
 
 ------------------
 ## License and Citation
@@ -67,7 +69,7 @@ The raw mouse sequencing data (ST and snRNA-seq) generated for this manuscript w
 If you use this code in your research, please cite the following:
 
 A molecular atlas of cell types in the mouse and human parkinsonian striatum. (2025). Authors: Marta Graziano, Ioannis Mantas, Yuvarani Masarapu, Solène Frapard, Raquel
-Garza, (..), Johan Jakobsson, Stefania Giacomello and Konstantinos Meletis
+Garza, Anita Adami, Shaline Fazal, Annelies Quaegebeur, Roger Barker, Johan Jakobsson, Stefania Giacomello and Konstantinos Meletis
 
 This repository is released under the [MIT License](https://opensource.org/license/mit) - see the [LICENSE](LICENSE) file for details.
 
