@@ -58,12 +58,12 @@ The repository is organized as follows:
     - **/Human datasets/**: R scripts to analyse and generate plots for human full datasets shown in Figure 1 and 5, and human subclustering datasets shown in Figure 6.
         - **Human Datasets/Sub_clustering_SPNs_human**
         - **Human Datasets/Sub_clustering_SPNs_human**
-    - **/Cell_Ranger/**: Shell scripts (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)) to generate gene count matrices using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0).
+    - **/Cell_Ranger/**: Shell scripts (also available at [Giacomello GitHub](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)) to generate gene count matrices using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0).
         - **Cell_Ranger/cellranger_run_loop.sh**
         - **Cell_Ranger/run_cr_230619.sh**
         - **Cell_Ranger/run_cr_count_2023-06-26.sh**
  
-- Folder **SpatialTranscriptomics/** contains scripts (also available [here](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of spatial transcriptomic data obtained from Visium technology:
+- Folder **SpatialTranscriptomics/** contains scripts (also available at [Giacomello GitHub](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/main/SpatialTranscriptomics)) to <i>generate gene count matrices, perform downstream analysis, and produce plots </i> of spatial transcriptomic data obtained from Visium technology:
     - **/Space_Ranger/**: Shell scripts to generate gene count matrices using the 10x Genomics Space Ranger pipeline (10x Genomics Space Ranger v1.3.1).
         - **Space_Ranger/run_spaceranger.sh**
         - **Space_Ranger/run_all_sr_setup.sh**
