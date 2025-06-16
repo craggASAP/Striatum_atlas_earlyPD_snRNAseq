@@ -56,7 +56,7 @@ The repository is organized as follows:
         - **Mouse Datasets/Analysis_full_dataset**
         - **Mouse Datasets/Sub_clustering_SPNs_mouse**
     - **/Human datasets/**: R scripts to analyse and generate plots for human full datasets shown in Figure 1 and 5, and human subclustering datasets shown in Figure 6.
-        - **Human Datasets/Sub_clustering_SPNs_human**
+        - **Human Datasets/Analysis_full_dataset**
         - **Human Datasets/Sub_clustering_SPNs_human**
     - **/Cell_Ranger/**: Shell scripts (also available at [Giacomello GitHub](https://github.com/giacomellolab/EarlyParkinsons_Striatum_Atlas/tree/e93711259786f1619879188beb27a51a13d047cb/snRNAseq/Processing_Scripts)) to generate gene count matrices using the 10x Genomics Cell Ranger software (10x Genomics Cell Ranger v7.1.0).
         - **Cell_Ranger/cellranger_run_loop.sh**
